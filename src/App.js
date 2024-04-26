@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import EmployeeTable from './Components/EmployeeTable';
-import EmployeeFormDialog from './Components/EmployeeFormDialog';
+import EmployeeForm from './Components/EmployeeForm';
 
 function App() {
   const [employees, setEmployees] = useState([]);
@@ -28,21 +29,40 @@ function App() {
   };
 
   const handleSaveEmployee = (data) => {
-    if (editIndex !== null) {
-      const updatedEmployees = [...employees];
-      updatedEmployees[editIndex] = data;
-      setEmployees(updatedEmployees);
+    const isDuplicate = employees.some(
+      (employee, index) =>
+        index !== editIndex &&
+        employee.firstName === data.firstName &&
+        employee.lastName === data.lastName &&
+        employee.email === data.email &&
+        employee.gender === data.gender &&
+        employee.countryCode === data.countryCode &&
+        employee.phoneNumber === data.phoneNumber
+    );
+  
+    if (isDuplicate) {
+      window.alert("Duplicate employee details are not allowed.");
     } else {
-      setEmployees([...employees, data]);
+      if (editIndex !== null) {
+        const updatedEmployees = [...employees];
+        if (data.isProfilePicRemoved) {
+          data.profilePhoto = '';
+        }
+        updatedEmployees[editIndex] = data;
+        setEmployees(updatedEmployees);
+      } else {
+        setEmployees([...employees, data]);
+      }
+      setOpenFormDialog(false);
+      setEditIndex(null);
     }
-    setOpenFormDialog(false);
-    setEditIndex(null);
   };
-
+  
+  
   return (
     <div>
       <EmployeeTable employees={employees} onEdit={handleEdit} onDelete={handleDelete} onAddEmployee={handleAdd} />
-      <EmployeeFormDialog open={openFormDialog} onClose={handleCloseFormDialog} onSave={handleSaveEmployee} employee={employees[editIndex]} />
+      <EmployeeForm open={openFormDialog} onClose={handleCloseFormDialog} onSave={handleSaveEmployee} employee={employees[editIndex]} />
     </div>
   );
 }

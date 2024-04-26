@@ -1,23 +1,33 @@
+
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Checkbox, Box, TablePagination, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { styled } from '@mui/system';
+import { AccountCircle } from '@mui/icons-material'; 
 
-// Styled TableCell for table head
+
 const StyledHeaderTableCell = styled(TableCell)({
   fontWeight: 'bold',
-  color: '#3f51b5', // Adjust color for table header
-  padding: '16px', // Adjust padding for table head cells
+  color: '#3f51b5', 
+  padding: '16px', 
 });
 
-// Styled TableCell for table body
 const StyledBodyTableCell = styled(TableCell)({
-  padding: '16px', // Adjust padding for table body cells
+  padding: '16px', 
+  textAlign: 'justify', 
 });
 
-// Styled IconButton for action buttons
+
 const StyledIconButton = styled(IconButton)({
-  margin: '0', // Reduce spacing between edit/delete icons
+  margin: '0',
+});
+
+const StyledDeleteButton = styled(Button)({
+  backgroundColor: '#f44336',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: '#d32f2f',
+  },
 });
 
 function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
@@ -63,11 +73,11 @@ function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
 
   return (
     <div style={{ backgroundColor: '#f9f9f9', padding: '20px', marginBottom: '40px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <Typography variant="h4" style={{ fontWeight: 'bold', color: '#3f51b5', marginBottom: '10px', fontFamily: 'inherit' }}>User Details</Typography>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', backgroundColor: '#3f51b5', padding: '10px', borderRadius: '10px' }}>
+        <Typography variant="h4" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', fontFamily: 'cursive' }}>Manage Employees</Typography>
         <Box>
           <Button variant="contained" color="primary" onClick={onAddEmployee} style={{ color: 'white', marginRight: '5px' }}>Add New Employee</Button>
-          <Button variant="contained" color="error" onClick={handleDeleteSelected} disabled={selectedRows.length === 0}>Delete Selected</Button>
+          <StyledDeleteButton onClick={handleDeleteSelected} disabled={selectedRows.length === 0}>Delete Selected</StyledDeleteButton>
         </Box>
       </div>
       <TableContainer component={Paper}>
@@ -83,7 +93,7 @@ function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
               <StyledHeaderTableCell>Profile Photo</StyledHeaderTableCell>
               <StyledHeaderTableCell>Name</StyledHeaderTableCell>
               <StyledHeaderTableCell>Email</StyledHeaderTableCell>
-              <StyledHeaderTableCell style={{ paddingLeft: '12px', paddingRight: '16px' }}>Gender</StyledHeaderTableCell> {/* Adjusted padding for gender header cell */}
+              <StyledHeaderTableCell style={{ paddingLeft: '12px', paddingRight: '16px' }}>Gender</StyledHeaderTableCell>
               <StyledHeaderTableCell>Phone Number</StyledHeaderTableCell>
               <StyledHeaderTableCell>Action</StyledHeaderTableCell>
             </TableRow>
@@ -101,12 +111,16 @@ function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
                   />
                 </TableCell>
                 <StyledBodyTableCell>
-                  <img src={employee.profilePhoto} alt="Profile" style={{ width: '50px', height: 'auto' }} />
+                  {employee.profilePhoto ? (
+                    <img src={employee.profilePhoto} alt="Profile" style={{ width: '50px', height: 'auto' }} />
+                  ) : (
+                    <AccountCircle style={{ fontSize: '50px', color: '#bdbdbd' }} />
+                  )}
                 </StyledBodyTableCell>
                 <StyledBodyTableCell>{employee.firstName} {employee.lastName}</StyledBodyTableCell>
                 <StyledBodyTableCell>{employee.email}</StyledBodyTableCell>
                 <StyledBodyTableCell>{employee.gender}</StyledBodyTableCell>
-                <StyledBodyTableCell>{`${employee.countryCode} ${employee.phoneNumber}`}</StyledBodyTableCell> {/* Displaying country code and phone number */}
+                <StyledBodyTableCell>{employee.countryCode && employee.phoneNumber ? `${employee.countryCode} ${employee.phoneNumber}` : (employee.phoneNumber || '-')}</StyledBodyTableCell> 
                 <StyledBodyTableCell>
                   <StyledIconButton onClick={() => onEdit(index + page * rowsPerPage)} color="success" size="small">
                     <Edit />
