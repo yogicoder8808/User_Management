@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Grid, Select, MenuItem, InputLabel, FormControl, Snackbar, Paper } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -28,12 +26,38 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const trimmedValue = value.trim();
+    let trimmedValue = value.trim();
+  
+    // Apply character limit for first and last names
     if ((name === 'firstName' || name === 'lastName') && trimmedValue.length > 20) {
       return;
     }
+  
+    // Validate phone number
+    if (name === 'phoneNumber') {
+      // Check if value contains any non-digit characters
+      if (/\D/.test(trimmedValue)) {
+        window.alert('Phone number must only contain digits.');
+        return;
+      }
+      // Limit to 10 digits
+      trimmedValue = trimmedValue.slice(0, 10);
+    }
+  
+    // Validate first name and last name
+    if (name === 'firstName' || name === 'lastName') {
+      // Check if value contains any digits
+      if (/\d/.test(trimmedValue)) {
+        window.alert('Name fields must not contain numbers.');
+        return;
+      }
+      // Allow only alphabetic characters
+      trimmedValue = trimmedValue.replace(/[^a-zA-Z]/g, '');
+    }
+  
     setFormData({ ...formData, [name]: trimmedValue });
   };
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -51,30 +75,30 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
     setIsProfilePicRemoved(true);
   };
 
- 
   const handleSave = () => {
     const requiredFields = ['firstName', 'lastName', 'email', 'gender'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     if (missingFields.length > 0) {
       setNotificationOpen(true);
     } else {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/; 
+      // Email validation with custom rule
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/; // Allow only .com addresses
       if (!emailRegex.test(formData.email)) {
         window.alert('Please enter a valid email address ending with ".com".');
         return;
       }
-  
-      if (formData.phoneNumber && formData.phoneNumber.length > 10) {
-        window.alert('Phone number must not exceed 10 digits.');
+
+      // Phone number limit
+      if (formData.phoneNumber && formData.phoneNumber.length !== 10) {
+        window.alert('Phone number must be exactly 10 digits.');
         return;
       }
-  
+
       onSave({ ...formData, profilePhoto: isProfilePicRemoved ? '' : profilePhoto || employee?.profilePhoto, isProfilePicRemoved });
       resetForm();
       onClose();
     }
   };
-  
 
   const resetForm = () => {
     setFormData({});
@@ -180,6 +204,7 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
 }
 
 export default EmployeeFormDialog;
+
 
 
 
