@@ -3,24 +3,23 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Checkbox, Box, TablePagination, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { styled } from '@mui/system';
-import { AccountCircle } from '@mui/icons-material'; // Import the AccountCircle icon
+import { AccountCircle } from '@mui/icons-material'; 
 
-// Styled TableCell for table head
+
 const StyledHeaderTableCell = styled(TableCell)({
   fontWeight: 'bold',
-  color: '#3f51b5', // Adjust color for table header
-  padding: '16px', // Adjust padding for table head cells
+  color: '#3f51b5', 
+  padding: '16px', 
 });
 
-// Styled TableCell for table body
 const StyledBodyTableCell = styled(TableCell)({
-  padding: '16px', // Adjust padding for table body cells
-  textAlign: 'justify', // Justify content horizontally
+  padding: '16px', 
+  textAlign: 'justify', 
 });
 
-// Styled IconButton for action buttons
+
 const StyledIconButton = styled(IconButton)({
-  margin: '0', // Reduce spacing between edit/delete icons
+  margin: '0',
 });
 
 const StyledDeleteButton = styled(Button)({
@@ -94,7 +93,7 @@ function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
               <StyledHeaderTableCell>Profile Photo</StyledHeaderTableCell>
               <StyledHeaderTableCell>Name</StyledHeaderTableCell>
               <StyledHeaderTableCell>Email</StyledHeaderTableCell>
-              <StyledHeaderTableCell style={{ paddingLeft: '12px', paddingRight: '16px' }}>Gender</StyledHeaderTableCell> {/* Adjusted padding for gender header cell */}
+              <StyledHeaderTableCell style={{ paddingLeft: '12px', paddingRight: '16px' }}>Gender</StyledHeaderTableCell>
               <StyledHeaderTableCell>Phone Number</StyledHeaderTableCell>
               <StyledHeaderTableCell>Action</StyledHeaderTableCell>
             </TableRow>
@@ -121,7 +120,7 @@ function EmployeeTable({ employees, onEdit, onDelete, onAddEmployee }) {
                 <StyledBodyTableCell>{employee.firstName} {employee.lastName}</StyledBodyTableCell>
                 <StyledBodyTableCell>{employee.email}</StyledBodyTableCell>
                 <StyledBodyTableCell>{employee.gender}</StyledBodyTableCell>
-                <StyledBodyTableCell>{employee.countryCode && employee.phoneNumber ? `${employee.countryCode} ${employee.phoneNumber}` : (employee.phoneNumber || '-')}</StyledBodyTableCell> {/* Displaying country code and phone number */}
+                <StyledBodyTableCell>{employee.countryCode && employee.phoneNumber ? `${employee.countryCode} ${employee.phoneNumber}` : (employee.phoneNumber || '-')}</StyledBodyTableCell> 
                 <StyledBodyTableCell>
                   <StyledIconButton onClick={() => onEdit(index + page * rowsPerPage)} color="success" size="small">
                     <Edit />

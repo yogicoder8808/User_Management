@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Grid, Select, MenuItem, InputLabel, FormControl, Snackbar, Paper } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -7,7 +8,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import GlobeIcon from '@mui/icons-material/Public'; 
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
-import { AccountCircle, Edit, Close } from '@mui/icons-material'; // Import AccountCircle, Edit, and Close icons
+import { AccountCircle, Edit, Close } from '@mui/icons-material'; 
 
 function EmployeeFormDialog({ open, onClose, onSave, employee }) {
   const [formData, setFormData] = useState({});
@@ -27,7 +28,11 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const trimmedValue = value.trim();
+    if ((name === 'firstName' || name === 'lastName') && trimmedValue.length > 20) {
+      return;
+    }
+    setFormData({ ...formData, [name]: trimmedValue });
   };
 
   const handleFileChange = (e) => {
@@ -46,17 +51,30 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
     setIsProfilePicRemoved(true);
   };
 
+ 
   const handleSave = () => {
     const requiredFields = ['firstName', 'lastName', 'email', 'gender'];
     const missingFields = requiredFields.filter(field => !formData[field]);
     if (missingFields.length > 0) {
       setNotificationOpen(true);
     } else {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com)$/; 
+      if (!emailRegex.test(formData.email)) {
+        window.alert('Please enter a valid email address ending with ".com".');
+        return;
+      }
+  
+      if (formData.phoneNumber && formData.phoneNumber.length > 10) {
+        window.alert('Phone number must not exceed 10 digits.');
+        return;
+      }
+  
       onSave({ ...formData, profilePhoto: isProfilePicRemoved ? '' : profilePhoto || employee?.profilePhoto, isProfilePicRemoved });
       resetForm();
       onClose();
     }
   };
+  
 
   const resetForm = () => {
     setFormData({});
@@ -162,5 +180,6 @@ function EmployeeFormDialog({ open, onClose, onSave, employee }) {
 }
 
 export default EmployeeFormDialog;
+
 
 
